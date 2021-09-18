@@ -4,3 +4,4 @@ Required packages to process this code:
  -> Mediapipe
  -> pynput
  ->(rust compiler) autopy
+https://www.autopy.org/documentation/api-reference/mouse.html

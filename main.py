@@ -10,14 +10,15 @@ from pynput.keyboard import Key,Controller
 cap=cv2.VideoCapture(0)
 
 #Need room for keyboard keys
-cap.set(3,1280)
+cap.set(3,1680)
 
 #720p HD Resolution set
-cap.set(4,720)
+cap.set(4,1080)
 
 detector = HandDetector(detectionCon=0.8)
-keys = [["Q","W","E","R","T","Y","U","I","O","P","backspace"],
-        ["A","S","D","F","G","H","J","K","L",";"],
+keys = [["1","2","3","4","5","6","7","8","9","0","-","+","BS"],
+        ["Q","W","E","R","T","Y","U","I","O","P","[","]","|"],
+        ["A","S","D","F","G","H","J","K","L",";","'"],
         ["Z","X","C","V","B","N","M",",",".","/"]]
 
 finalText=""
@@ -63,7 +64,7 @@ buttonList=[]
 #calling to create a button
 for i in range(len(keys)):
     for j,key in enumerate(keys[i]):
-        buttonList.append(Button([100*j+50,100*i+50], key))
+        buttonList.append(Button([90*j+5,90*i+10], key))
 
 while True:
     #Boiler cap for running Web Cap
@@ -97,7 +98,7 @@ while True:
                 
                 #when clicked
                 if l<40:
-                    if(button.text=="backspace"):
+                    if(button.text=="BS"):
                         Keyboard.press(Key.backspace)
                         sleep(0.5)
                     else:

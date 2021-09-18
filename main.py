@@ -15,7 +15,7 @@ cap.set(3,1680)
 #720p HD Resolution set
 cap.set(4,1080)
 flag=0
-x=[]
+xbuttonList=[]
 
 detector = HandDetector(detectionCon=0.8)
 keys = [["1","2","3","4","5","6","7","8","9","0","-","+","BS"],

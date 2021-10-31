@@ -14,14 +14,21 @@ cap.set(3,1680)
 
 #720p HD Resolution set
 cap.set(4,1080)
+flag=0
+xbuttonList=[]
 
 detector = HandDetector(detectionCon=0.8)
 keys = [["1","2","3","4","5","6","7","8","9","0","-","+","BS"],
         ["Q","W","E","R","T","Y","U","I","O","P","[","]","|"],
-        ["A","S","D","F","G","H","J","K","L",";","'"],
+        ["A","S","D","F","G","H","J","K","L",";","'","CK"],
         ["Z","X","C","V","B","N","M",",",".","/"]]
 
-finalText=""
+keys1 = [["1","2","3","4","5","6","7","8","9","0","-","+","BS"],
+        ["q","w","e","r","t","y","u","i","o","p","{","}","|"],
+        ["a","s","d","f","g","h","j","k","l",":",'"',"CK"],
+        ["z","x","c","v","b","n","m","<",">","?"]]
+
+#finalText=""
 
 Keyboard=Controller()
 
@@ -36,9 +43,9 @@ Keyboard=Controller()
 #        cv2.putText(img,button.text,(x+20,y+65),cv2.FONT_HERSHEY_PLAIN,4,(255,255,255),4)
 #    return img
 
-def drawALL(img, buttonList):
+def drawALL(img, xbuttonList):
     imgNew=np.zeros_like(img, np.uint8)
-    for button in buttonList:
+    for button in xbuttonList:
         x, y=button.pos
         cvzone.cornerRect(imgNew, (button.pos[0], button.pos[1], button.size[0],button.size[1]),l=30, t=5, rt=0,
          colorR=(255, 0, 255), colorC=(0, 255, 0))
@@ -64,7 +71,12 @@ buttonList=[]
 #calling to create a button
 for i in range(len(keys)):
     for j,key in enumerate(keys[i]):
-        buttonList.append(Button([90*j+5,90*i+10], key))
+        buttonList.append(Button([90*j+20,90*i+10], key))
+
+buttonList1=[]
+for i in range(len(keys1)):
+    for j,key in enumerate(keys1[i]):
+        buttonList1.append(Button([90*j+5,90*i+10], key))
 
 while True:
     #Boiler cap for running Web Cap
@@ -73,11 +85,15 @@ while True:
     #Finding hands and their coordinates(Landmark points)
     img = detector.findHands(img)
     lmList, bboxInfo = detector.findPosition(img)
-    img=drawALL(img,buttonList)
+    if((flag&1)==0):
+        xbuttonList=buttonList
+    else:
+        xbuttonList=buttonList1
+    img=drawALL(img,xbuttonList)
 
     #Checking if there is hand or not
     if lmList:
-        for button in buttonList:
+        for button in xbuttonList:
             #We need to know the position of button and whether
             #our finger is there in that range or not
             x,y=button.pos
@@ -101,17 +117,22 @@ while True:
                     if(button.text=="BS"):
                         Keyboard.press(Key.backspace)
                         sleep(0.5)
+                    elif(button.text=="CK"):
+                        flag+=1
+                        img=drawALL(img,buttonList1)
+                        sleep(0.5)
                     else:
                         Keyboard.press(button.text)
                         cv2.rectangle(img,button.pos,(x+w ,y+h),(0,255,0), cv2.FILLED)
                         cv2.putText(img,button.text,(x+20,y+65),cv2.FONT_HERSHEY_PLAIN,4,(255,255,255),4)
-                        finalText+=button.text
+                        #finalText+=button.text
                         sleep(0.5)
+                        
                     #print(button.text)
                     
 
-    cv2.rectangle(img,(50,350),(700,450),(175,0,175), cv2.FILLED)
-    cv2.putText(img,finalText,(60,450),cv2.FONT_HERSHEY_PLAIN,4,(255,255,255),4)
+    #cv2.rectangle(img,(50,350),(700,450),(175,0,175), cv2.FILLED)
+    #cv2.putText(img,finalText,(60,450),cv2.FONT_HERSHEY_PLAIN,4,(255,255,255),4)
 
 
 
